@@ -26,7 +26,6 @@ function start() {
     mystery.push(source[randomIndex]);
     source.splice(randomIndex, 1);
   }
-  console.log(mystery);
   createInputs();
 }
 
