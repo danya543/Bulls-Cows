@@ -14,6 +14,7 @@ const inputNames = [
   "tenth",
 ];
 const checkInputs = [];
+createModalRestart();
 
 const container = document.createElement("div");
 container.classList.add("container");
@@ -66,22 +67,27 @@ function initialGame(size) {
     source.splice(randomIndex, 1);
   }
 
-  console.log(mystery);
   createInputs(size);
 }
 
-function restart() {
+function createModalRestart() {
   const modalRestart = document.createElement("div");
   modalRestart.id = "modal_restart";
-  const headingRestart = document.createElement("h3");
+  const container = document.createElement("div");
+  const headingRestart = document.createElement("h2");
   headingRestart.innerText = "You win!";
   const restartBtn = document.createElement("button");
   restartBtn.innerText = "Restart";
   restartBtn.addEventListener("click", () => {
     location.reload();
   });
-  modalRestart.append(headingRestart, restartBtn);
+  container.append(headingRestart, restartBtn);
+  modalRestart.append(container);
   root.append(modalRestart);
+}
+
+function restart() {
+  document.getElementById("modal_restart").style.top = 0;
 }
 function createInputs(size) {
   let source = numbers.slice();

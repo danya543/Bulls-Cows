@@ -29,6 +29,7 @@ body {
   transform: translate(-50%, -50%); */
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100vw;
@@ -42,6 +43,7 @@ body {
   gap: 50px;
 }
 .container h1 {
+  font-size: clamp(1rem, 10vw, 3rem);
   text-align: center;
 }
 
@@ -174,11 +176,48 @@ input[type=submit]:hover:enabled {
 }
 
 #modal_restart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 1s;
   width: 100vw;
   height: 100vh;
   position: absolute;
   top: -100%;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+}
+#modal_restart div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 20px;
+  width: 20%;
+  gap: 20px;
+  padding: 20px;
+}
+#modal_restart div h2 {
+  font-size: clamp(1.5rem, 15vw, 2rem);
+}
+#modal_restart div button {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: clamp(1rem, 10vw, 1.5rem);
+  border: 0;
+  --c: #FFA500;
+  box-shadow: 0 0 0 0.1em inset var(--c);
+  --_g: linear-gradient(var(--c) 0 0) no-repeat;
+  background: var(--_g) calc(var(--_p, 0%) - 100%) 0%, var(--_g) calc(200% - var(--_p, 0%)) 0%, var(--_g) calc(var(--_p, 0%) - 100%) 100%, var(--_g) calc(200% - var(--_p, 0%)) 100%;
+  background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
+  outline-offset: 0.1em;
+  transition: background-size 0.4s, background-position 0s 0.4s;
+}
+#modal_restart div button:hover {
+  color: white;
+  --_p: 100%;
+  transition: background-position 0.4s, background-size 0s;
 }
 
 #currentSize {
