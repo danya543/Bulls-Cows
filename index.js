@@ -1,7 +1,18 @@
 const root = document.getElementById("root");
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const mystery = [];
-const inputNames = ["fisrt", "second", "third", "fourth"];
+const inputNames = [
+  "fisrt",
+  "second",
+  "third",
+  "fourth",
+  "fivth",
+  "sixth",
+  "seventh",
+  "eightth",
+  "nineth",
+  "tenth",
+];
 const checkInputs = [];
 
 const container = document.createElement("div");
@@ -9,7 +20,7 @@ container.classList.add("container");
 const history = document.createElement("div");
 history.classList.add("history");
 const header = document.createElement("h1");
-header.innerText = "Bulls and cows";
+header.innerText = "Bulls&Cows";
 const startBtn = document.createElement("button");
 startBtn.innerText = "START";
 startBtn.id = "start";
@@ -20,30 +31,71 @@ root.append(container, history);
 function start() {
   document.querySelector("#start").remove();
 
+  const size = document.createElement("input");
+  size.type = "range";
+  size.id = "size";
+  size.min = 1;
+  size.max = 10;
+  size.addEventListener("change", () => {
+    const value = document.getElementById("size").value;
+    currentSize.innerText = value;
+  });
+  const currentSize = document.createElement("div");
+  currentSize.innerText = size.value;
+  currentSize.id = "currentSize";
+  const acceptBtn = document.createElement("input");
+  acceptBtn.type = "submit";
+  acceptBtn.id = "accept";
+  acceptBtn.value = "Accept";
+  acceptBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const value = Number(document.getElementById("currentSize").innerText);
+    initialGame(value);
+    size.remove();
+    currentSize.remove();
+    acceptBtn.remove();
+  });
+  container.append(currentSize, size, acceptBtn);
+}
+
+function initialGame(size) {
   const source = numbers.slice();
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < size; i++) {
     const randomIndex = Math.floor(Math.random() * source.length);
     mystery.push(source[randomIndex]);
     source.splice(randomIndex, 1);
   }
-  createInputs();
+
+  console.log(mystery);
+  createInputs(size);
 }
 
 function restart() {
-  confirm("You win!\nWant to restart the game?") ? location.reload() : 1;
+  const modalRestart = document.createElement("div");
+  modalRestart.id = "modal_restart";
+  const headingRestart = document.createElement("h3");
+  headingRestart.innerText = "You win!";
+  const restartBtn = document.createElement("button");
+  restartBtn.innerText = "Restart";
+  restartBtn.addEventListener("click", () => {
+    location.reload();
+  });
+  modalRestart.append(headingRestart, restartBtn);
+  root.append(modalRestart);
 }
-function createInputs() {
+function createInputs(size) {
   let source = numbers.slice();
   const form = document.createElement("form");
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    checkValues();
+    checkValues(size);
     source = numbers.slice();
-    checkInputs.splice(0, 4);
+    checkInputs.splice(0, size);
     document.querySelector("#submit").disabled = true;
   });
   form.addEventListener("change", (event) => {
     event.preventDefault();
+
     const value = +event.target.value;
     if (source.indexOf(value) >= 0) {
       source.includes(value) &&
@@ -51,12 +103,15 @@ function createInputs() {
         checkInputs.push(event.target.name);
     }
 
-    if (checkInputs.length === 4) document.querySelector("#submit").disabled = false;
+    if (checkInputs.length === size) {
+      document.querySelector("#submit").disabled = false;
+    }
   });
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < size; i++) {
     const input = document.createElement("input");
     input.type = "text";
+    input.maxLength = 1;
     input.name = inputNames[i];
     form.append(input);
   }
@@ -88,18 +143,16 @@ function createHistory(prevNum, bulls, cows) {
   history.prepend(row);
 }
 
-function checkValues() {
+function checkValues(size) {
   const form = document.querySelector("form");
   const children = form.childNodes;
   let cows = 0;
   let bulls = 0;
 
-  const inputs = {
-    0: mystery.indexOf(Number(children[0].value)),
-    1: mystery.indexOf(Number(children[1].value)),
-    2: mystery.indexOf(Number(children[2].value)),
-    3: mystery.indexOf(Number(children[3].value)),
-  };
+  const inputs = {};
+  for (let i = 0; i < size; i++) {
+    inputs[i] = mystery.indexOf(Number(children[i].value));
+  }
 
   for (const input in inputs) {
     if (inputs[input] >= 0) {
@@ -111,10 +164,10 @@ function checkValues() {
     }
   }
   const prevNums = [];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < size; i++) {
     prevNums.push(Number(children[i].value));
     children[i].value = "";
   }
   createHistory(prevNums, bulls, cows);
-  bulls === 4 && restart();
+  bulls === size && restart();
 }
