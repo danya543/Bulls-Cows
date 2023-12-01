@@ -40,6 +40,7 @@ function start() {
   const size = document.createElement("input");
   size.type = "range";
   size.id = "size";
+  size.value = 4;
   size.min = 1;
   size.max = 10;
   size.addEventListener("change", () => {
@@ -118,6 +119,7 @@ function restartButton() {
   const img = document.createElement("img");
   img.src =
     "https://github.com/danya543/Bulls-Cows/assets/118297018/5024297c-c1bd-4cae-9b58-57194931741c";
+  img.alt = "restart";
   restartBtn.append(img);
   root.append(restartBtn);
 }
@@ -187,6 +189,7 @@ function createInputs(size) {
   container.append(form);
 }
 function createHistory(prevNum, bulls, cows) {
+  console.log(prevNum);
   const row = document.createElement("div");
   row.classList.add("point");
   for (num of prevNum) {
@@ -207,7 +210,8 @@ function createHistory(prevNum, bulls, cows) {
 
 function checkValues(size) {
   const form = document.querySelector("form");
-  const children = form.childNodes;
+  const children = form.childNodes[0].childNodes;
+  console.log(children);
   let cows = 0;
   let bulls = 0;
 
@@ -227,9 +231,11 @@ function checkValues(size) {
   }
   const prevNums = [];
   for (let i = 0; i < size; i++) {
+    console.log(children[i].value);
     prevNums.push(Number(children[i].value));
     children[i].value = "";
   }
+  prevNums;
   createHistory(prevNums, bulls, cows);
   bulls === size && restart();
 }
