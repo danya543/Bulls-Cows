@@ -1,6 +1,7 @@
 const root = document.getElementById("root");
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const mystery = [];
+const gameModes = ["easy", "hard"];
 const inputNames = [
   "fisrt",
   "second",
@@ -32,6 +33,10 @@ root.append(container, history);
 function start() {
   document.querySelector("#start").remove();
 
+  const sizeBlock = document.createElement("div");
+  sizeBlock.id = "size_block";
+  const header = document.createElement("h2");
+  header.innerText = "Choose quantity of mystery numbers";
   const size = document.createElement("input");
   size.type = "range";
   size.id = "size";
@@ -41,22 +46,55 @@ function start() {
     const value = document.getElementById("size").value;
     currentSize.innerText = value;
   });
-  const currentSize = document.createElement("div");
+
+  const currentSize = document.createElement("p");
   currentSize.innerText = size.value;
   currentSize.id = "currentSize";
+
+  sizeBlock.append(header, currentSize, size);
+
+  const modeBlock = document.createElement("div");
+  modeBlock.id = "game_mode";
+
+  const modeHeader = document.createElement("h2");
+  modeHeader.innerText = "Game mode";
+  modeBlock.append(modeHeader);
+  for (let i = 0; i < gameModes.length; i++) {
+    const radioBlock = document.createElement("div");
+    radioBlock.classList.add("form_radio_group-item");
+    const gameMode = document.createElement("input");
+    gameMode.type = "radio";
+    gameMode.name = "mode";
+    gameMode.id = gameModes[i];
+    if (gameModes[i] === gameModes[0]) {
+      gameMode.checked = true;
+    }
+    const modeLabel = document.createElement("label");
+    modeLabel.for = gameModes[i];
+    modeLabel.innerText = gameModes[i];
+    radioBlock.append(gameMode, modeLabel);
+    modeBlock.append(radioBlock);
+  }
+
   const acceptBtn = document.createElement("input");
   acceptBtn.type = "submit";
   acceptBtn.id = "accept";
   acceptBtn.value = "Accept";
   acceptBtn.addEventListener("click", (event) => {
     event.preventDefault();
+    const currentMode = gameModes.find((mode) => {
+      return document.getElementById(mode).checked;
+    });
+    console.log(currentMode);
+
     const value = Number(document.getElementById("currentSize").innerText);
     initialGame(value);
-    size.remove();
-    currentSize.remove();
+    sizeBlock.remove();
+    modeBlock.remove();
     acceptBtn.remove();
   });
-  container.append(currentSize, size, acceptBtn);
+
+  container.append(sizeBlock, modeBlock, acceptBtn);
 }
 
 function initialGame(size) {
@@ -68,6 +106,20 @@ function initialGame(size) {
   }
 
   createInputs(size);
+  restartButton();
+}
+
+function restartButton() {
+  const restartBtn = document.createElement("button");
+  restartBtn.id = "restart_btn";
+  restartBtn.addEventListener("click", () => {
+    location.reload();
+  });
+  const img = document.createElement("img");
+  img.src =
+    "https://github.com/danya543/Bulls-Cows/assets/118297018/5024297c-c1bd-4cae-9b58-57194931741c";
+  restartBtn.append(img);
+  root.append(restartBtn);
 }
 
 function createModalRestart() {
@@ -88,6 +140,7 @@ function createModalRestart() {
 
 function restart() {
   document.getElementById("modal_restart").style.top = 0;
+  document.getElementById("modal_restart").style.left = 0;
 }
 function createInputs(size) {
   let source = numbers.slice();
@@ -114,13 +167,16 @@ function createInputs(size) {
     }
   });
 
+  const inputs = document.createElement("div");
   for (let i = 0; i < size; i++) {
     const input = document.createElement("input");
     input.type = "text";
     input.maxLength = 1;
     input.name = inputNames[i];
-    form.append(input);
+    inputs.append(input);
   }
+  form.append(inputs);
+
   const submit = document.createElement("input");
   submit.type = "submit";
   submit.id = "submit";
